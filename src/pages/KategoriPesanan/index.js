@@ -9,20 +9,14 @@ import {
   View,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
-import {
-  HomeBackground,
-  Promo,
-  IconBox,
-  IconInbox,
-  Makanan,
-} from '../../assets/images';
+import {HomeBackground, Promo, IconBox, Makanan2, Minuman2} from '../../assets';
 
-const Home = ({navigation}) => {
+const KategoriPesanan = ({navigation}) => {
   return (
     <View style={styles.beranda}>
       <ImageBackground source={HomeBackground} style={styles.home}>
         <ScrollView style={styles.container}>
-          <Text style={styles.dashboard}>Dashboard</Text>
+          <Text style={styles.dashboard}>KategoriPesanan</Text>
           <View style={styles.sliderContainer}>
             <Swiper
               autoplay={true}
@@ -52,19 +46,19 @@ const Home = ({navigation}) => {
               </View>
             </Swiper>
           </View>
-          <Text style={styles.toko}>Pilih Pesanan</Text>
+          <Text style={styles.toko}>Toko Harian Family</Text>
           <View style={styles.categoryContainerr}>
             <View style={styles.categoryContainer}>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('KategoriPesanan');
+                  navigation.navigate('Makanan');
                 }}
                 style={styles.categoryBtn}>
                 <Image
-                  source={IconBox}
+                  source={Makanan2}
                   resizeMode="contain"
                   style={{
-                    width: 66,
+                    width: 56,
                     height: 61,
                     marginTop: 10,
                     marginBottom: 10,
@@ -72,17 +66,17 @@ const Home = ({navigation}) => {
                     alignSelf: 'center',
                   }}
                 />
-                <Text style={styles.categoryBtnTxt}>Take AWay</Text>
+                <Text style={styles.categoryBtnTxt}>Makanan</Text>
               </TouchableOpacity>
             </View>
             <View style={styles.categoryContainer}>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate('Datameja');
+                  navigation.navigate('Minuman');
                 }}
                 style={styles.categoryBtn}>
                 <Image
-                  source={IconInbox}
+                  source={Minuman2}
                   resizeMode="contain"
                   style={{
                     width: 66,
@@ -93,51 +87,8 @@ const Home = ({navigation}) => {
                     alignSelf: 'center',
                   }}
                 />
-                <Text style={styles.categoryBtnTxt}>Dine In</Text>
+                <Text style={styles.categoryBtnTxt}>Minuman</Text>
               </TouchableOpacity>
-            </View>
-          </View>
-          <Text style={styles.toko}>Popular Menu</Text>
-          <View>
-            <TouchableOpacity>
-              <Text style={styles.viewmore}>View More</Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.card}>
-            <View style={styles.cardImgWrapper}>
-              <Image
-                source={Makanan}
-                style={{
-                  width: 80,
-                  height: 61,
-                  marginTop: 15,
-                  marginBottom: 10,
-                  marginHorizontal: 0,
-                  marginLeft: 15,
-                }}
-              />
-              <Text style={styles.categoryFoodTxt}>Sate Spesial</Text>
-              <Text style={styles.categoryTokoTxt}>Toko Harian Family</Text>
-              <Text style={styles.categoryHargaTxt}>Rp 6.000</Text>
-            </View>
-          </View>
-          <View style={styles.card}>
-            <View style={styles.cardImgWrapper}>
-              <Image
-                source={Makanan}
-                style={{
-                  width: 80,
-                  height: 61,
-                  marginTop: 15,
-                  marginBottom: 10,
-                  marginHorizontal: 0,
-                  marginLeft: 15,
-                }}
-              />
-              <Text style={styles.categoryFoodTxt}>Sate Spesial</Text>
-              <Text style={styles.categoryTokoTxt}>Toko Harian Family</Text>
-              <Text style={styles.categoryHargaTxt}>Rp 6.000</Text>
             </View>
           </View>
         </ScrollView>
@@ -146,7 +97,7 @@ const Home = ({navigation}) => {
   );
 };
 
-export default Home;
+export default KategoriPesanan;
 
 const styles = StyleSheet.create({
   container: {
@@ -165,11 +116,11 @@ const styles = StyleSheet.create({
     height: 850,
   },
   dashboard: {
-    width: 233,
+    width: 250,
     height: 41,
     fontFamily: 'BentonsSans Bold',
     fontWeight: 'bold',
-    fontSize: 31,
+    fontSize: 29,
     lineHeight: 40.62,
     color: '#09051C',
     marginTop: 85,
@@ -217,44 +168,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.5,
     elevation: 9,
   },
-  categoryBtn: {
-    flex: 1,
-    width: '30%',
-    marginHorizontal: 0,
-    alignSelf: 'center',
-  },
-  categoryBtnTxt: {
-    alignSelf: 'center',
-    marginTop: 5,
-    fontWeight: 'bold',
-    color: '#09051C',
-  },
-  categoryFoodTxt: {
-    alignSelf: 'center',
-    marginTop: -60,
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#09051C',
-    // marginRight: 105,
-  },
-  categoryTokoTxt: {
-    alignSelf: 'center',
-    fontSize: 10,
-    marginTop: 0,
-    fontWeight: 'bold',
-    // marginRight: 100,
-    color: '#09051C',
-  },
-  categoryHargaTxt: {
-    fontFamily: 'BentonsSans Bold',
-    fontWeight: 'bold',
-    alignSelf: 'center',
-    fontSize: 20,
-    lineHeight: 19.65,
-    color: '#FF7C32',
-    marginTop: -25,
-    marginLeft: 215,
-  },
   toko: {
     width: 139,
     height: 31,
@@ -267,53 +180,16 @@ const styles = StyleSheet.create({
     marginLeft: 25,
     marginRight: 100,
   },
-  viewmore: {
-    fontFamily: 'BentonsSans Bold',
-    fontWeight: 'bold',
-    fontSize: 14,
-    lineHeight: 19.65,
-    color: '#FF7C32',
-    marginTop: -5,
-    marginLeft: 265,
-  },
-  cardsWrapper: {
-    marginTop: 20,
-    width: '90%',
-    alignSelf: 'center',
-  },
-  card: {
-    height: 80,
-    width: '90%',
-    marginVertical: 10,
-    flexDirection: 'row',
-    shadowColor: '#999',
-    shadowOffset: {width: 1, height: 1},
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
-    elevation: 5,
-    backgroundColor: 'white',
-  },
-  card1: {
-    height: 80,
-    width: '90%',
-    marginVertical: 10,
-    flexDirection: 'row',
-    shadowColor: '#999',
-    shadowOffset: {width: 1, height: 1},
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
-    elevation: 5,
-    backgroundColor: 'white',
-  },
-  cardImgWrapper: {
+  categoryBtn: {
     flex: 1,
-  },
-  cardImg: {
-    height: '100%',
-    width: '100%',
+    width: '30%',
+    marginHorizontal: 0,
     alignSelf: 'center',
-    borderRadius: 8,
-    borderBottomRightRadius: 0,
-    borderTopRightRadius: 0,
+  },
+  categoryBtnTxt: {
+    alignSelf: 'center',
+    marginTop: 5,
+    fontWeight: 'bold',
+    color: '#09051C',
   },
 });

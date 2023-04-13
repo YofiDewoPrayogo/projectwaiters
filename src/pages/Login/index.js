@@ -1,110 +1,226 @@
-import React, { useState, useEffect } from 'react'
-import { StyleSheet, Text, View, ImageBackground, Image, TouchableOpacity, TextInput } from 'react-native'
-import { Logo, Background } from '../../assets'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {useState} from 'react';
+import {
+  Button,
+  Image,
+  ImageBackground,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {Logo, Background} from '../../assets';
+import {user_login} from './../../api/user_api';
+import {MainApp} from '../Home';
 
-const Login = ({ navigation }) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+export default function Login({navigation, setIsLogin, isLogin}) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [seePassword, setSeePassword] = useState(true);
+  const [checkValidEmail, setCheckValidEmail] = useState(false);
 
-    return (
-        <ImageBackground source={Background} style={styles.background}>
-            <Image source={Logo} style={styles.logo} />
-            <Text style={styles.garuda}>Garuda Kasir</Text>
-            <Text style={styles.footer}>Login To Your Account</Text>
-            <TextInput value={email} style={styles.email} placeholder="Masukkan Email/Username" onChangeText={email => setEmail(email)} />
-            <TextInput value={password} style={styles.password} placeholder="Masukkan Password" onChangeText={password => setPassword(password)} secureTextEntry />
-            <Text style={styles.footer1}>Forgot Your Password?</Text>
-            <TouchableOpacity style={styles.next} onPress={() => { navigation.navigate('MainApp', { email: email, password: password }) }}>
-                <Text style={styles.nxttext}>Login</Text>
-            </TouchableOpacity>
-        </ImageBackground>
-    )
-}
+  const handleCheckEmail = text => {
+    let re = /\S+@\S+\.\S+/;
+    let regex = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
 
-export default Login
-
-const styles = StyleSheet.create({
-    background: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
-    logo: {
-        width: 178,
-        height: 178,
-        marginTop: 1,
-    },
-    garuda: {
-        textAlign: 'center',
-        letterSpacing: 0.02,
-        fontSize: 25,
-        fontFamily: 'Viga',
-        lineHeight: 33.6,
-        fontWeight: 'bold',
-        color: '#FA0000',
-        marginBottom: 60
-    },
-    footer: {
-        textAlign: 'center',
-        fontSize: 20,
-        fontFamily: 'BentonSans Bold',
-        fontWeight: 'bold',
-        lineHeight: 26.2,
-        color: '#09051C',
-        marginTop: 10,
-        marginBottom: 50,
-        marginLeft: 82,
-        marginRight: 82
-    },
-    email: {
-        backgroundColor: '#FFFFFF',
-        width: 325,
-        height: 57,
-        borderRadius: 15,
-        elevation: 5,
-        marginBottom: 20,
-        paddingHorizontal: 25
-    },
-    password: {
-        backgroundColor: '#FFFFFF',
-        width: 325,
-        height: 57,
-        borderRadius: 15,
-        elevation: 5,
-        paddingHorizontal: 25,
-        marginBottom: 10
-    },
-    footer1: {
-        textAlign: 'center',
-        fontSize: 14,
-        fontFamily: 'BentonSans Medium',
-        fontWeight: 'bold',
-        lineHeight: 23.31,
-        color: '#E85353',
-        marginTop: 10,
-        marginBottom: 90,
-    },
-    next: {
-        width: 157,
-        height: 57,
-        textAlign: 'center',
-        fontFamily: 'BentonSans Book',
-        fontWeight: '400',
-        lineHeight: 21.66,
-        backgroundColor: '#E85353',
-        borderRadius: 15,
-        marginTop: 10,
-        marginBottom: 10,
-        marginLeft: 82,
-        marginRight: 82
-    },
-    nxttext: {
-        textAlign: 'center',
-        fontFamily: 'BentonSans Bold',
-        fontWeight: '400',
-        fontSize: 21,
-        lineHeight: 20.96,
-        color: '#FFFFFF',
-        marginTop: 20,
+    setEmail(text);
+    if (re.test(text) || regex.test(text)) {
+      setCheckValidEmail(false);
+    } else {
+      setCheckValidEmail(true);
     }
-})
+  };
+
+  const checkPasswordValidity = value => {
+    const isNonWhiteSpace = /^\S*$/;
+    // if (!isNonWhiteSpace.test(value)) {
+    //   return 'Password must not contain Whitespaces.';
+    // }
+
+    // const isContainsNumber = /^(?=.*[0-9]).*$/;
+    // if (!isContainsNumber.test(value)) {
+    //   return 'Password must contain at least one Digit.';
+    // }
+
+    // const isValidLength = /^.{8,16}$/;
+    // if (!isValidLength.test(value)) {
+    //   return 'Password must be 8-16 Characters Long.';
+    // }
+
+    // const isContainsSymbol =
+    //   /^(?=.*[~`!@#$%^&*()--+={}\[\]|\\:;"'<>,.?/_₹]).*$/;
+    // if (!isContainsSymbol.test(value)) {
+    //   return 'Password must contain at least one Special Symbol.';
+    // }
+
+    return null;
+  };
+
+  const authLogin = () => {
+    console.log('navigation : ', navigation);
+    const checkPassowrd = checkPasswordValidity(password);
+    if (!checkPassowrd) {
+      user_login({
+        email: email.toLocaleLowerCase(),
+        password: password,
+      })
+        .then(result => {
+          console.log('tes : ', result);
+          if (result.status !== 200) throw new Error();
+          AsyncStorage.setItem('AccessToken', result.data.accessToken);
+          alert('Login Berhasil');
+          console.log('token res : ', result.data);
+          setIsLogin(result.data.accessToken);
+        })
+        .catch(err => {
+          alert('username atau password salah');
+        });
+    } else {
+      alert(checkPassowrd);
+    }
+  };
+
+  return (
+    <ImageBackground source={Background} style={styles.background}>
+      <Image source={Logo} style={styles.logo} />
+      <Text style={styles.garuda}>Garuda Kasir {isLogin} </Text>
+      <Text style={styles.footer}>Login To Your Account</Text>
+
+      <View style={email}>
+        <TextInput
+          value={email}
+          style={styles.email}
+          placeholder="Masukkan Email/Username"
+          onChangeText={email => setEmail(email)}
+        />
+        {checkValidEmail ? (
+          <Text style={styles.textFailed}>Wrong format email</Text>
+        ) : (
+          <Text style={styles.textFailed}> </Text>
+        )}
+      </View>
+      <View style={password}>
+        <TextInput
+          value={password}
+          style={styles.password}
+          placeholder="Masukkan Password"
+          onChangeText={password => setPassword(password)}
+          secureTextEntry
+        />
+        <TouchableOpacity
+          style={styles.wrapperIcon}
+          onPress={() => setSeePassword(!seePassword)}></TouchableOpacity>
+      </View>
+
+      <Text style={styles.footer1}>Forgot Your Password?</Text>
+
+      {email == '' || password == '' || checkValidEmail == true ? (
+        <TouchableOpacity
+          disabled
+          style={styles.buttonDisable}
+          onPress={MainApp}>
+          <Text style={styles.text}>Login</Text>
+        </TouchableOpacity>
+      ) : (
+        <TouchableOpacity style={styles.button} onPress={authLogin}>
+          <Text style={styles.text}>Login</Text>
+        </TouchableOpacity>
+      )}
+    </ImageBackground>
+  );
+}
+const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    marginHorizontal: 20,
+  },
+  logo: {
+    width: 178,
+    height: 150,
+    marginTop: 1,
+  },
+  garuda: {
+    textAlign: 'center',
+    letterSpacing: 0.02,
+    fontSize: 25,
+    fontFamily: 'Viga',
+    lineHeight: 33.6,
+    fontWeight: 'bold',
+    color: '#FA0000',
+    marginBottom: 40,
+  },
+  footer: {
+    textAlign: 'center',
+    fontSize: 20,
+    fontFamily: 'BentonSans Bold',
+    fontWeight: 'bold',
+    lineHeight: 26.2,
+    color: '#09051C',
+    marginTop: 10,
+    marginBottom: 25,
+    marginLeft: 82,
+    marginRight: 82,
+  },
+  email: {
+    backgroundColor: '#FFFFFF',
+    width: 325,
+    height: 57,
+    borderRadius: 15,
+    elevation: 5,
+    paddingHorizontal: 25,
+  },
+  password: {
+    backgroundColor: '#FFFFFF',
+    width: 325,
+    height: 57,
+    borderRadius: 15,
+    elevation: 5,
+    paddingHorizontal: 25,
+    marginBottom: 10,
+  },
+  footer1: {
+    textAlign: 'center',
+    fontSize: 14,
+    fontFamily: 'BentonSans Medium',
+    fontWeight: 'bold',
+    lineHeight: 23.31,
+    color: '#E85353',
+    marginTop: 10,
+    marginBottom: 60,
+  },
+  button: {
+    width: 157,
+    height: 57,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#E85353',
+    borderRadius: 15,
+    marginTop: 15,
+    marginBottom: 15,
+  },
+  buttonDisable: {
+    width: 157,
+    height: 57,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'grey',
+    borderRadius: 15,
+    marginTop: 15,
+    marginBottom: 15,
+  },
+  text: {
+    color: 'white',
+    fontWeight: '700',
+  },
+  textFailed: {
+    alignSelf: 'flex-end',
+    color: 'red',
+  },
+});
